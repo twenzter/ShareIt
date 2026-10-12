@@ -1,22 +1,18 @@
 package ru.yandex.practicum.item;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import ru.yandex.practicum.item.dto.ItemDto;
 
 import java.util.Collection;
+import java.util.List;
 
-public interface ItemRepository {
+public interface ItemRepository extends JpaRepository<Item, Long> {
+    List<Item> findByOwner_Id(Long ownerId);
 
-    Collection<Item> findByUserId(Long userId);
-
-    Item save(Item item);
-
-    Item findByItemId(Long itemId);
-
-    Item updateItem(Long itemId, Item updItem);
-
-    boolean deleteByItemId(Long itemId);
-
-    Collection<Item> search(String text);
-
-    boolean isItemNotExists(Long itemId);
+    @Query(" select i from Item i " +
+            "where (upper(i.name) like upper(concat('%', ?1, '%')) " +
+            "   or upper(i.description) like upper(concat('%', ?1, '%')))" +
+            "   and i.available = true")
+    List<Item> search(String text);
 }

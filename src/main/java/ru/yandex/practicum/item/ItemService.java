@@ -1,20 +1,27 @@
 package ru.yandex.practicum.item;
 
-import ru.yandex.practicum.item.dto.ItemDto;
-import ru.yandex.practicum.item.dto.ItemUpdateRequest;
+import org.springframework.transaction.annotation.Transactional;
+import ru.yandex.practicum.item.dto.*;
 
-import java.util.Collection;
+import java.util.List;
 
+@Transactional(readOnly = true)
 public interface ItemService {
-    Collection<ItemDto> getItems(Long userId);
+    List<ItemDetailsDto> getItems(Long userId);
 
-    ItemDto addNewItem(Long userId, ItemDto item);
+    @Transactional
+    ItemDto addNewItem(Long userId, NewItemRequest newItem);
 
-    boolean deleteItem(Long userId, Long itemId);
+    @Transactional
+    void deleteItem(Long userId, Long itemId);
 
-    ItemDto getItemById(Long userId, Long itemId);
+    ItemDetailsDto getItemById(Long userId, Long itemId);
 
+    @Transactional
     ItemDto updateItem(Long userId, Long itemId, ItemUpdateRequest item);
 
-    Collection<ItemDto> search(Long userId, String text);
+    List<ItemDto> search(Long userId, String text);
+
+    @Transactional
+    CommentDto addNewComment(Long userId, Long itemId, NewCommentRequest newComment);
 }

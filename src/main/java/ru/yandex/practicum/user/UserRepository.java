@@ -1,20 +1,7 @@
 package ru.yandex.practicum.user;
 
-import java.util.Collection;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository {
-    Collection<User> findAll();
-
-    User save(User user);
-
-    User findUser(Long id);
-
-    User updateUser(Long userId, User updUser);
-
-    boolean deleteUser(Long userId);
-
-
-    boolean isEmailExists(String email);
-
-    boolean isUserNotExists(Long userId);
+public interface UserRepository extends JpaRepository<User, Long> {
+    User findByEmail(String email);
 }
