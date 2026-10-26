@@ -69,14 +69,14 @@ public class ItemServiceIntegrationTest {
                 true
         );
 
-        ItemDto created = service.updateItem(owner.getId(), item.getId(), itemUpdateRequest);
+        ItemDto updated = service.updateItem(owner.getId(), item.getId(), itemUpdateRequest);
 
         TypedQuery<Item> query = em.createQuery("Select i from Item i where i.id=:id", Item.class);
-        Item itemSql = query.setParameter("id", created.getId()).getSingleResult();
+        Item itemSql = query.setParameter("id", updated.getId()).getSingleResult();
 
-        assertThat(itemSql.getId(), is(created.getId()));
-        assertThat(itemSql.getDescription(), is(created.getDescription()));
-        assertThat(itemSql.getAvailable(), is(created.getAvailable()));
+        assertThat(itemSql.getId(), is(updated.getId()));
+        assertThat(itemSql.getDescription(), is(updated.getDescription()));
+        assertThat(itemSql.getAvailable(), is(updated.getAvailable()));
     }
 
     @Test

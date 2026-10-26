@@ -35,7 +35,7 @@ public class BookingControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    private BookingDto bookingDto = new BookingDto(
+    private final BookingDto bookingDto = new BookingDto(
                 1L,
                 LocalDateTime.now(),
                 LocalDateTime.now().plusHours(2),
@@ -48,7 +48,7 @@ public class BookingControllerTest {
         NewBookingRequest newBookingRequest = new NewBookingRequest(1L,
                 LocalDateTime.now().plusHours(1), LocalDateTime.now().plusDays(2));
 
-        when(bookingService.addNewBooking(anyLong(), any()))
+        when(bookingService.addNewBooking(anyLong(), any(NewBookingRequest.class)))
                 .thenReturn(bookingDto);
 
         mvc.perform(post("/bookings")
@@ -68,11 +68,10 @@ public class BookingControllerTest {
 
     @Test
     void updateStatusTest() throws Exception {
-        when(bookingService.updateBookingStatus(anyLong(), anyLong(), any()))
+        when(bookingService.updateBookingStatus(anyLong(), anyLong(), anyBoolean()))
                 .thenReturn(bookingDto);
 
         mvc.perform(patch("/bookings/{bookingId}", 1L)
-                        .content(mapper.writeValueAsString(bookingDto))
                         .header("X-Sharer-User-Id", 1L)
                         .param("approved", "true")
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -93,7 +92,6 @@ public class BookingControllerTest {
                 .thenReturn(bookingDto);
 
         mvc.perform(get("/bookings/{bookingId}", 1L)
-                        .content(mapper.writeValueAsString(bookingDto))
                         .header("X-Sharer-User-Id", 1L)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)

@@ -6,14 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
-import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.user.dto.NewUserRequest;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserUpdateRequest;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -24,122 +20,45 @@ public class UserDtoJsonTest {
     private final JacksonTester<UserDto> userDtoJson;
     private final JacksonTester<UserUpdateRequest> userUpdateRequestJson;
 
-//    @Test
-//    void testCommentDto() throws Exception {
-//        CommentDto commentDto = new CommentDto(
-//                1L,
-//                "text",
-//                1L,
-//                "name",
-//                LocalDateTime.now()
-//        );
-//
-//        JsonContent<CommentDto> result = commentDtoJson.write(commentDto);
-//
-//        assertThat(result).extractingJsonPathNumberValue("$.id")
-//                .isEqualTo(1);
-//        assertThat(result).extractingJsonPathStringValue("$.text")
-//                .isEqualTo(commentDto.getText());
-//        assertThat(result).extractingJsonPathNumberValue("$.itemId")
-//                .isEqualTo(1);
-//        assertThat(result).extractingJsonPathStringValue("$.authorName")
-//                .isEqualTo(commentDto.getAuthorName());
-//        assertThat(result).hasJsonPath("$.created");
-//    }
-//
-//    @Test
-//    void testItemDetailsDto() throws Exception {
-//        ItemDetailsDto itemDetailsDto = new ItemDetailsDto(
-//                1L,
-//                "name",
-//                "description",
-//                true,
-//                new BookingDto(),
-//                new BookingDto(),
-//                List.of()
-//        );
-//        JsonContent<ItemDetailsDto> result = itemDetailsDtoJson.write(itemDetailsDto);
-//
-//        assertThat(result).extractingJsonPathNumberValue("$.id")
-//                .isEqualTo(1);
-//        assertThat(result).extractingJsonPathStringValue("$.name")
-//                .isEqualTo(itemDetailsDto.getName());
-//        assertThat(result).extractingJsonPathStringValue("$.description")
-//                .isEqualTo(itemDetailsDto.getDescription());
-//        assertThat(result).extractingJsonPathBooleanValue("$.available")
-//                .isEqualTo(itemDetailsDto.getAvailable());
-//        assertThat(result).hasJsonPath("$.lastBooking");
-//        assertThat(result).hasJsonPath("$.nextBooking");
-//        assertThat(result).extractingJsonPathArrayValue("$.comments");
-//    }
-//
-//    @Test
-//    void testItemDto() throws Exception {
-//        ItemDto itemDto = new ItemDto(
-//                1L,
-//                "name",
-//                "description",
-//                true
-//        );
-//
-//        JsonContent<ItemDto> result = itemDtoJson.write(itemDto);
-//
-//        assertThat(result).extractingJsonPathNumberValue("$.id")
-//                .isEqualTo(1);
-//        assertThat(result).extractingJsonPathStringValue("$.name")
-//                .isEqualTo(itemDto.getName());
-//        assertThat(result).extractingJsonPathStringValue("$.description")
-//                .isEqualTo(itemDto.getDescription());
-//        assertThat(result).extractingJsonPathBooleanValue("$.available")
-//                .isEqualTo(itemDto.getAvailable());
-//    }
-//
-//    @Test
-//    void testItemUpdateRequest() throws Exception {
-//        ItemUpdateRequest itemUpdateRequest = new ItemUpdateRequest(
-//                "name",
-//                "description",
-//                true
-//        );
-//
-//        JsonContent<ItemUpdateRequest> result = itemUpdateRequestJson.write(itemUpdateRequest);
-//
-//        assertThat(result).extractingJsonPathStringValue("$.name")
-//                .isEqualTo(itemUpdateRequest.getName());
-//        assertThat(result).extractingJsonPathStringValue("$.description")
-//                .isEqualTo(itemUpdateRequest.getDescription());
-//        assertThat(result).extractingJsonPathBooleanValue("$.available")
-//                .isEqualTo(itemUpdateRequest.getAvailable());
-//    }
-//
-//    @Test
-//    void testNewCommentRequest() throws Exception {
-//        NewCommentRequest newCommentRequest = new NewCommentRequest("text");
-//
-//        JsonContent<NewCommentRequest> result = newCommentRequestJson.write(newCommentRequest);
-//
-//        assertThat(result).extractingJsonPathStringValue("$.text")
-//                .isEqualTo(newCommentRequest.getText());
-//    }
-//
-//    @Test
-//    void testNewItemRequest() throws Exception {
-//        NewItemRequest newItemRequest = new NewItemRequest(
-//                "name",
-//                "description",
-//                true,
-//                2L
-//        );
-//
-//        JsonContent<NewItemRequest> result = newItemRequestJson.write(newItemRequest);
-//
-//        assertThat(result).extractingJsonPathStringValue("$.name")
-//                .isEqualTo(newItemRequest.getName());
-//        assertThat(result).extractingJsonPathStringValue("$.description")
-//                .isEqualTo(newItemRequest.getDescription());
-//        assertThat(result).extractingJsonPathBooleanValue("$.available")
-//                .isEqualTo(newItemRequest.getAvailable());
-//        assertThat(result).extractingJsonPathNumberValue("$.requestId")
-//                .isEqualTo(2);
-//    }
+    @Test
+    void testNewUserRequest() throws Exception {
+        NewUserRequest newUserRequest = new NewUserRequest("email@mail.ru", "name");
+
+        JsonContent<NewUserRequest> result = newUserRequestJson.write(newUserRequest);
+
+        assertThat(result).extractingJsonPathStringValue("$.email")
+                .isEqualTo(newUserRequest.getEmail());
+        assertThat(result).extractingJsonPathStringValue("$.name")
+                .isEqualTo(newUserRequest.getName());
+    }
+
+    @Test
+    void testUserDto() throws Exception {
+        UserDto userDto = new UserDto(
+                1L,
+                "email@mail.ru",
+                "name"
+        );
+
+        JsonContent<UserDto> result = userDtoJson.write(userDto);
+
+        assertThat(result).extractingJsonPathNumberValue("$.id")
+                .isEqualTo(1);
+        assertThat(result).extractingJsonPathStringValue("$.email")
+                .isEqualTo(userDto.getEmail());
+        assertThat(result).extractingJsonPathStringValue("$.name")
+                .isEqualTo(userDto.getName());
+    }
+
+    @Test
+    void testUserUpdatedRequest() throws Exception {
+        UserUpdateRequest userUpdateRequest = new UserUpdateRequest("email2@mail.ru", "name2");
+
+        JsonContent<UserUpdateRequest> result = userUpdateRequestJson.write(userUpdateRequest);
+
+        assertThat(result).extractingJsonPathStringValue("$.email")
+                .isEqualTo(userUpdateRequest.getEmail());
+        assertThat(result).extractingJsonPathStringValue("$.name")
+                .isEqualTo(userUpdateRequest.getName());
+    }
 }

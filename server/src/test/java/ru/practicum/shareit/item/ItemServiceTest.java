@@ -211,6 +211,7 @@ public class ItemServiceTest {
 
         verify(userRepository, times(1)).existsById(2L);
         verify(itemRepository, times(1)).findById(anyLong());
+        verify(itemRepository, times(1)).deleteById(anyLong());
     }
 
     @Test
@@ -226,6 +227,7 @@ public class ItemServiceTest {
 
         verify(userRepository, times(1)).existsById(2L);
         verify(itemRepository, never()).findById(anyLong());
+        verify(itemRepository, never()).deleteById(anyLong());
     }
 
     @Test
@@ -243,6 +245,7 @@ public class ItemServiceTest {
 
         verify(userRepository, times(1)).existsById(2L);
         verify(itemRepository, times(1)).findById(anyLong());
+        verify(itemRepository, never()).deleteById(anyLong());
 
     }
 

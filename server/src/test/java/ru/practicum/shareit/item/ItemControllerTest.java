@@ -32,14 +32,14 @@ public class ItemControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    private ItemDto itemDto = new ItemDto(
+    private final ItemDto itemDto = new ItemDto(
             1L,
             "name",
             "description",
             true
     );
 
-    private ItemDetailsDto itemDetailsDto = new ItemDetailsDto(
+    private final ItemDetailsDto itemDetailsDto = new ItemDetailsDto(
             1L,
             "name",
             "description",
@@ -55,7 +55,7 @@ public class ItemControllerTest {
         NewItemRequest newItemRequest = new NewItemRequest(
                 "name", "description", true, null);
 
-        when(itemService.addNewItem(anyLong(), any()))
+        when(itemService.addNewItem(anyLong(), any(NewItemRequest.class)))
                 .thenReturn(itemDto);
 
         mvc.perform(post("/items")
@@ -73,11 +73,17 @@ public class ItemControllerTest {
 
     @Test
     void updateItemTest() throws Exception {
-        when(itemService.updateItem(anyLong(), anyLong(), any()))
+        ItemUpdateRequest itemUpdateRequest = new ItemUpdateRequest(
+                "name",
+                "description",
+                true
+        );
+
+        when(itemService.updateItem(anyLong(), anyLong(), any(ItemUpdateRequest.class)))
                 .thenReturn(itemDto);
 
         mvc.perform(patch("/items/{itemId}", 1L)
-                        .content(mapper.writeValueAsString(itemDto))
+                        .content(mapper.writeValueAsString(itemUpdateRequest))
                         .header("X-Sharer-User-Id", 1L)
                         .param("approved", "true")
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -96,7 +102,6 @@ public class ItemControllerTest {
                 .thenReturn(itemDetailsDto);
 
         mvc.perform(get("/items/{itemId}", 1L)
-                        .content(mapper.writeValueAsString(itemDto))
                         .header("X-Sharer-User-Id", 1L)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)

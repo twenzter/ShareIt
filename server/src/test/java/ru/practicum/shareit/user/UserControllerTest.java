@@ -7,14 +7,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.item.ItemController;
-import ru.practicum.shareit.item.ItemService;
 import ru.practicum.shareit.item.dto.*;
+import ru.practicum.shareit.user.dto.NewUserRequest;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserUpdateRequest;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
@@ -35,147 +33,93 @@ public class UserControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    private UserDto userDto = new UserDto(
-
+    private final UserDto userDto = new UserDto(
+            1L,
+            "email@mail.ru",
+            "name"
     );
 
+    @Test
+    void addNewUserTest() throws Exception {
+        NewUserRequest newUserRequest = new NewUserRequest("email@mail.ru", "name");
 
-//    @Test
-//    void addNewItemTest() throws Exception {
-//        NewItemRequest newItemRequest = new NewItemRequest(
-//                "name", "description", true, null);
-//
-//        when(itemService.addNewItem(anyLong(), any()))
-//                .thenReturn(itemDto);
-//
-//        mvc.perform(post("/items")
-//                        .content(mapper.writeValueAsString(newItemRequest))
-//                        .header("X-Sharer-User-Id", 1L)
-//                        .characterEncoding(StandardCharsets.UTF_8)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isCreated())
-//                .andExpect(jsonPath("$.id", is(itemDto.getId()), Long.class))
-//                .andExpect(jsonPath("$.name", is(itemDto.getName()), String.class))
-//                .andExpect(jsonPath("$.description", is(itemDto.getDescription()), String.class))
-//                .andExpect(jsonPath("$.available", is(itemDto.getAvailable()), Boolean.class));
-//    }
-//
-//    @Test
-//    void updateItemTest() throws Exception {
-//        when(itemService.updateItem(anyLong(), anyLong(), any()))
-//                .thenReturn(itemDto);
-//
-//        mvc.perform(patch("/items/{itemId}", 1L)
-//                        .content(mapper.writeValueAsString(itemDto))
-//                        .header("X-Sharer-User-Id", 1L)
-//                        .param("approved", "true")
-//                        .characterEncoding(StandardCharsets.UTF_8)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id", is(itemDto.getId()), Long.class))
-//                .andExpect(jsonPath("$.name", is(itemDto.getName()), String.class))
-//                .andExpect(jsonPath("$.description", is(itemDto.getDescription()), String.class))
-//                .andExpect(jsonPath("$.available", is(itemDto.getAvailable()), Boolean.class));
-//    }
-//
-//    @Test
-//    void getItemByIdTest() throws Exception {
-//        when(itemService.getItemById(anyLong(), anyLong()))
-//                .thenReturn(itemDetailsDto);
-//
-//        mvc.perform(get("/items/{itemId}", 1L)
-//                        .content(mapper.writeValueAsString(itemDto))
-//                        .header("X-Sharer-User-Id", 1L)
-//                        .characterEncoding(StandardCharsets.UTF_8)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id", is(itemDto.getId()), Long.class))
-//                .andExpect(jsonPath("$.name", is(itemDto.getName()), String.class))
-//                .andExpect(jsonPath("$.description", is(itemDto.getDescription()), String.class))
-//                .andExpect(jsonPath("$.available", is(itemDto.getAvailable()), Boolean.class))
-//                .andExpect(jsonPath("$.lastBooking").exists())
-//                .andExpect(jsonPath("$.nextBooking").exists())
-//                .andExpect(jsonPath("$.comments").exists());
-//    }
-//
-//    @Test
-//    void deleteItemByIdTest() throws Exception {
-//        mvc.perform(delete("/items/{itemId}", 1L)
-//                        .header("X-Sharer-User-Id", 1L)
-//                        .characterEncoding(StandardCharsets.UTF_8)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isNoContent());
-//    }
-//
-//    @Test
-//    void getItemsTest() throws Exception {
-//        when(itemService.getItems(anyLong(), anyInt(), anyInt()))
-//                .thenReturn(List.of(itemDetailsDto));
-//
-//        mvc.perform(get("/items")
-//                        .header("X-Sharer-User-Id", 1L)
-//                        .characterEncoding(StandardCharsets.UTF_8)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$").isArray())
-//                .andExpect(jsonPath("$[0].id", is(itemDto.getId()), Long.class))
-//                .andExpect(jsonPath("$[0].name", is(itemDto.getName()), String.class))
-//                .andExpect(jsonPath("$[0].description", is(itemDto.getDescription()), String.class))
-//                .andExpect(jsonPath("$[0].available", is(itemDto.getAvailable()), Boolean.class))
-//                .andExpect(jsonPath("$[0].lastBooking").exists())
-//                .andExpect(jsonPath("$[0].nextBooking").exists())
-//                .andExpect(jsonPath("$[0].comments").exists());
-//    }
-//
-//
-//    @Test
-//    void searchTest() throws Exception {
-//        when(itemService.search(anyLong(), anyString(), anyInt(), anyInt()))
-//                .thenReturn(List.of(itemDto));
-//
-//        mvc.perform(get("/items/search")
-//                        .header("X-Sharer-User-Id", 1L)
-//                        .param("text", "description")
-//                        .characterEncoding(StandardCharsets.UTF_8)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$").isArray())
-//                .andExpect(jsonPath("$[0].id", is(itemDto.getId()), Long.class))
-//                .andExpect(jsonPath("$[0].name", is(itemDto.getName()), String.class))
-//                .andExpect(jsonPath("$[0].description", is(itemDto.getDescription()), String.class))
-//                .andExpect(jsonPath("$[0].available", is(itemDto.getAvailable()), Boolean.class));
-//    }
-//
-//    @Test
-//    void addNewCommentTest() throws Exception {
-//        CommentDto commentDto = new CommentDto(
-//                1L,
-//                "text",
-//                1L,
-//                "name",
-//                LocalDateTime.now()
-//        );
-//
-//        when(itemService.addNewComment(anyLong(), anyLong(), any(NewCommentRequest.class)))
-//                .thenReturn(commentDto);
-//
-//        mvc.perform(post("/items/{itemId}/comment", 1L)
-//                        .content(mapper.writeValueAsString(commentDto))
-//                        .header("X-Sharer-User-Id", 1L)
-//                        .characterEncoding(StandardCharsets.UTF_8)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isCreated())
-//                .andExpect(jsonPath("$.id", is(commentDto.getId()), Long.class))
-//                .andExpect(jsonPath("$.text", is(commentDto.getText()), String.class))
-//                .andExpect(jsonPath("$.itemId", is(commentDto.getItemId()), Long.class))
-//                .andExpect(jsonPath("$.authorName", is(commentDto.getAuthorName()), String.class))
-//                .andExpect(jsonPath("$.created").exists());
-//    }
+        when(userService.saveUser(any(NewUserRequest.class)))
+                .thenReturn(userDto);
+
+        mvc.perform(post("/users")
+                        .content(mapper.writeValueAsString(newUserRequest))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", is(userDto.getId()), Long.class))
+                .andExpect(jsonPath("$.email", is(userDto.getEmail()), String.class))
+                .andExpect(jsonPath("$.name", is(userDto.getName()), String.class));
+    }
+
+    @Test
+    void updateItemTest() throws Exception {
+        UserUpdateRequest userUpdateRequest = new UserUpdateRequest("email2@mail.ru", "name2");
+        UserDto updatedUserDto = new UserDto(
+                1L,
+                "email2@mail.ru",
+                "name2"
+        );
+
+        when(userService.updateUserById(anyLong(), any()))
+                .thenReturn(updatedUserDto);
+
+        mvc.perform(patch("/users/{userId}", 1L)
+                        .content(mapper.writeValueAsString(userUpdateRequest))
+                        .param("approved", "true")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(updatedUserDto.getId()), Long.class))
+                .andExpect(jsonPath("$.email", is(updatedUserDto.getEmail()), String.class))
+                .andExpect(jsonPath("$.name", is(updatedUserDto.getName()), String.class));
+    }
+
+    @Test
+    void getUserByIdTest() throws Exception {
+        when(userService.getUserById(anyLong()))
+                .thenReturn(userDto);
+
+        mvc.perform(get("/users/{userId}", 1L)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(userDto.getId()), Long.class))
+                .andExpect(jsonPath("$.email", is(userDto.getEmail()), String.class))
+                .andExpect(jsonPath("$.name", is(userDto.getName()), String.class));
+    }
+
+    @Test
+    void deleteUserByIdTest() throws Exception {
+        mvc.perform(delete("/users/{userId}", 1L)
+                        .header("X-Sharer-User-Id", 1L)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void getAllUsersTest() throws Exception {
+        when(userService.getAllUsers(anyInt(), anyInt()))
+                .thenReturn(List.of(userDto));
+
+        mvc.perform(get("/users")
+                        .header("X-Sharer-User-Id", 1L)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].id", is(userDto.getId()), Long.class))
+                .andExpect(jsonPath("$[0].email", is(userDto.getEmail()), String.class))
+                .andExpect(jsonPath("$[0].name", is(userDto.getName()), String.class));
+    }
 }
